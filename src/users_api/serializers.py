@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from users_api import models
 
+
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializes a user profile object"""
 
