@@ -16,15 +16,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             }
         }
 
-    def clean(self):
-        age = self.cleaned_data.get('age')
-        if age is None:
-            return self.fields['age'].initial
-            # above can be: return 1
-            # but now it takes value from model definition
-        else:
-            return age
-
     def create(self, validated_data):
         """Create and return a new user"""
         user = models.UserProfile.objects.create_user(

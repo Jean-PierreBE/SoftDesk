@@ -56,13 +56,12 @@ class UserProfile(AbstractBaseUser):
         blank=True
     )
     age = models.IntegerField(
-        default=1,
         validators=[
             MaxValueValidator(110),
             MinValueValidator(1)
         ],
-        blank = True,
-        null = True
+        blank=True,
+        null=True
     )
     email = models.EmailField(
         unique=True,
@@ -81,9 +80,12 @@ class UserProfile(AbstractBaseUser):
     objects = MyUserManager()
 
     def save(self, *args, **kwargs):
+        if self.age is None:
+            self.age = 1
         if self.age < 15:
             self.can_data_be_shared = False
-        super(UserProfile, self).save(*args, **kwargs)
+        super(UserProfile, self).save( *args, **kwargs)
+
     def has_perm(self, perm, obj=None):
         return True
 
