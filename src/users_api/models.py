@@ -84,7 +84,7 @@ class UserProfile(AbstractBaseUser):
             self.age = 1
         if self.age < 15:
             self.can_data_be_shared = False
-        super(UserProfile, self).save( *args, **kwargs)
+        super(UserProfile, self).save(*args, **kwargs)
 
     def has_perm(self, perm, obj=None):
         return True
