@@ -16,9 +16,12 @@ class Project(models.Model):
     description = models.TextField(max_length=2048, blank=True, verbose_name="Description du projet")
     type = models.CharField(max_length=55, choices=TYPES, verbose_name="Type de projet")
 
+    def __str__(self):
+        return self.title
 
 class Contributor(models.Model):
     ROLES = (
+        ('CRT', 'Creator'),
         ('PM', 'Project Manager'),
         ('DEV', 'Developer'),
         ('TST', 'Tester'),
@@ -30,6 +33,8 @@ class Contributor(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.role
 
 class Issue(models.Model):
     TAGS = (
@@ -60,9 +65,14 @@ class Issue(models.Model):
                                       null=True, related_name='assign')
     time_created = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
 
 class Comment(models.Model):
     description = models.TextField(max_length=2048, blank=True, verbose_name="Commentaire")
     issue = models.ForeignKey(to=Issue, on_delete=models.CASCADE)
     author_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     time_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.description

@@ -1,7 +1,6 @@
 from django.urls import path, include
-
-from tracking import views
+from tracking.views import ProjectCreateView
 
 urlpatterns = [
-    path('projects/', views.ProjectCreateView.as_view())
+    path('projects/', ProjectCreateView.as_view())
 ]
