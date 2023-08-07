@@ -4,10 +4,14 @@ from django.shortcuts import render
 from rest_framework import generics
 from tracking.models import Project, Contributor
 from tracking.serializers import ContributorSerializer, ProjectSerializer
+from tracking.permissions import UpdateOwnObjects
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 
 class ProjectCreateView(generics.CreateAPIView):
     serializer_class = ProjectSerializer
     contributor = Contributor()
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
         return Project.objects.all()
 
