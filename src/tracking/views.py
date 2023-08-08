@@ -5,6 +5,7 @@ from rest_framework import generics
 from tracking.models import Project, Contributor
 from tracking.serializers import ContributorSerializer, ProjectSerializer
 from tracking.permissions import UpdateOwnObjects
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
@@ -23,5 +24,9 @@ class ProjectCreateView(generics.CreateAPIView):
         self.contributor.role = "CRT"
         self.contributor.project_id = project.id
         self.contributor.save()
+
+class ProjectUserView(viewsets.ModelViewSet):
+    queryset = Contributor.objects.all()
+    serializer_class = ContributorSerializer
 
 
