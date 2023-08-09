@@ -2,8 +2,8 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework import generics
-from tracking.models import Project, Contributor
-from tracking.serializers import ContributorSerializer, ProjectSerializer, ProjectDetailSerializer
+from tracking.models import Project, Contributor, Issue
+from tracking.serializers import ContributorSerializer, ProjectSerializer, ProjectDetailSerializer, IssueSerializer
 from tracking.permissions import UpdateOwnObjects
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -34,4 +34,9 @@ class ProjectView(viewsets.ModelViewSet):
 class ContributorView(viewsets.ModelViewSet):
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, UpdateOwnObjects]
+
+class IssueView(viewsets.ModelViewSet):
+    queryset = Issue.objects.all()
+    serializer_class = IssueSerializer
+    permission_classes = [IsAuthenticated, UpdateOwnObjects]
