@@ -9,7 +9,14 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class ContributorSerializer(serializers.ModelSerializer):
-    project = ProjectSerializer()
+    #project = ProjectSerializer()
     class Meta:
         model = Contributor
         fields = "__all__"
+
+class ProjectDetailSerializer(serializers.ModelSerializer):
+    contributor_set = ContributorSerializer(many=True)
+    class Meta:
+        model = Project
+        fields = "__all__"
+
