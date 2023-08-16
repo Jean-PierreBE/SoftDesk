@@ -40,18 +40,21 @@ class ContributorView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, UpdateOwnObjects]
 
     def get_queryset(self):
+
         return self.queryset.filter(project_id=self.kwargs["project_id"])
 
     def perform_create(self, serializer):
         serializer.save(project_id=self.kwargs["project_id"],author_user=self.request.user)
 
 class IssueView(viewsets.ModelViewSet):
-    queryset = Issue.objects.all()
+
     serializer_class = IssueSerializer
     permission_classes = [IsAuthenticated, UpdateOwnObjects]
 
     def get_queryset(self):
-        return self.queryset.filter(project_id=self.kwargs["project_id"])
+        owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')
+        queryset = Issue.objects.filter(id__in=owncontributor_id)
+        return queryset.filter(project_id=self.kwargs["project_id"])
 
     def perform_create(self, serializer):
         serializer.save(project_id=self.kwargs["project_id"],author_user=self.request.user)
