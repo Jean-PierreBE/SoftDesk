@@ -26,6 +26,11 @@ class IssueSerializer(serializers.ModelSerializer):
         model = Issue
         fields = "__all__"
 
+    def validate(self, data):
+        if data['assignee_user'] == self.context["request"].user:
+            raise serializers.ValidationError('assignee_user should be different from author_user!!')
+        return data
+
 class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:

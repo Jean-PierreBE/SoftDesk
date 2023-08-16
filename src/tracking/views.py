@@ -12,7 +12,7 @@ from rest_framework.authentication import TokenAuthentication
 
 class ProjectView(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
-    contributor = Contributor()
+
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
         allcontributor = Contributor.objects.all()
@@ -28,11 +28,11 @@ class ProjectView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
 
         project = serializer.save()
-
-        self.contributor.author_user = self.request.user
-        self.contributor.role = "CRT"
-        self.contributor.project_id = project.id
-        self.contributor.save()
+        contributor = Contributor()
+        contributor.author_user = self.request.user
+        contributor.role = "CRT"
+        contributor.project_id = project.id
+        contributor.save()
 
 class ContributorView(viewsets.ModelViewSet):
     queryset = Contributor.objects.all()
@@ -40,7 +40,10 @@ class ContributorView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, UpdateOwnObjects]
 
     def get_queryset(self):
-        return self.queryset.filter(author_user=self.request.user)
+        return self.queryset.filter(project_id=self.kwargs["project_id"])
+
+    def perform_create(self, serializer):
+        serializer.save(project_id=self.kwargs["project_id"],author_user=self.request.user)
 
 class IssueView(viewsets.ModelViewSet):
     queryset = Issue.objects.all()
@@ -52,6 +55,7 @@ class IssueView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(project_id=self.kwargs["project_id"],author_user=self.request.user)
+
 
 class CommentView(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
