@@ -1,5 +1,6 @@
 from rest_framework import permissions
 
+
 class UpdateOwnObjects(permissions.BasePermission):
     """Allow user to edit their own objects"""
 

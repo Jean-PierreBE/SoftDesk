@@ -8,7 +8,8 @@ MESSAGE_NO_PSEUDO = "Veuillez saisir un pseudo !"
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, pseudo, first_name, last_name, age, email, can_be_contacted, can_data_be_shared, password=None):
+    def create_user(self, pseudo, first_name, last_name, age, email, can_be_contacted, can_data_be_shared,
+                    password=None):
         if not pseudo:
             raise ValueError(MESSAGE_NO_PSEUDO)
 
@@ -28,7 +29,8 @@ class MyUserManager(BaseUserManager):
         user.save()
         return user
 
-    def create_superuser(self, pseudo, first_name, last_name, age, email, can_be_contacted, can_data_be_shared, password=None):
+    def create_superuser(self, pseudo, first_name, last_name, age, email, can_be_contacted, can_data_be_shared,
+                         password=None):
         user = self.create_user(pseudo=pseudo, first_name=first_name,
                                 last_name=last_name, age=age,
                                 email=email,

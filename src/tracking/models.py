@@ -19,6 +19,7 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+
 class Contributor(models.Model):
     ROLES = (
         ('CRT', 'Creator'),
@@ -35,6 +36,7 @@ class Contributor(models.Model):
 
     def __str__(self):
         return self.role
+
 
 class Issue(models.Model):
     TAGS = (
@@ -67,6 +69,7 @@ class Issue(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Comment(models.Model):
     description = models.TextField(max_length=2048, blank=True, verbose_name="Commentaire")

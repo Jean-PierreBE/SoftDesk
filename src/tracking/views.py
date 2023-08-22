@@ -1,19 +1,17 @@
-from django.shortcuts import render
-
 # Create your views here.
-from rest_framework import generics
 from tracking.models import Project, Contributor, Issue, Comment
 from tracking.serializers import ContributorSerializer, ProjectSerializer, \
     ProjectDetailSerializer, IssueSerializer, CommentSerializer
 from tracking.permissions import UpdateOwnObjects
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
+
 
 class ProjectView(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
 
     permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
         allcontributor = Contributor.objects.all()
         owncontributor_id = allcontributor.filter(author_user=self.request.user).values_list('project_id')
@@ -34,6 +32,7 @@ class ProjectView(viewsets.ModelViewSet):
         contributor.project_id = project.id
         contributor.save()
 
+
 class ContributorView(viewsets.ModelViewSet):
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
@@ -44,7 +43,8 @@ class ContributorView(viewsets.ModelViewSet):
         return self.queryset.filter(project_id=self.kwargs["project_id"])
 
     def perform_create(self, serializer):
-        serializer.save(project_id=self.kwargs["project_id"],author_user=self.request.user)
+        serializer.save(project_id=self.kwargs["project_id"], author_user=self.request.user)
+
 
 class IssueView(viewsets.ModelViewSet):
 
@@ -57,7 +57,7 @@ class IssueView(viewsets.ModelViewSet):
         return queryset.filter(project_id=self.kwargs["project_id"])
 
     def perform_create(self, serializer):
-        serializer.save(project_id=self.kwargs["project_id"],author_user=self.request.user)
+        serializer.save(project_id=self.kwargs["project_id"], author_user=self.request.user)
 
 
 class CommentView(viewsets.ModelViewSet):
@@ -69,4 +69,4 @@ class CommentView(viewsets.ModelViewSet):
         return self.queryset.filter(issue_id=self.kwargs["issue_id"])
 
     def perform_create(self, serializer):
-        serializer.save(issue_id=self.kwargs["issue_id"],author_user=self.request.user)
+        serializer.save(issue_id=self.kwargs["issue_id"], author_user=self.request.user)
