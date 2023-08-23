@@ -5,6 +5,7 @@ from tracking.serializers import ContributorSerializer, ProjectSerializer, \
 from tracking.permissions import UpdateOwnObjects
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
 
 
 class ProjectView(viewsets.ModelViewSet):
@@ -53,7 +54,7 @@ class IssueView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')
-        queryset = Issue.objects.filter(id__in=owncontributor_id)
+        queryset = Issue.objects.filter(Q(project_id__in=owncontributor_id) & Q(project_id__in=owncontributor_id))
         return queryset.filter(project_id=self.kwargs["project_id"])
 
     def perform_create(self, serializer):
@@ -61,12 +62,15 @@ class IssueView(viewsets.ModelViewSet):
 
 
 class CommentView(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, UpdateOwnObjects]
 
     def get_queryset(self):
-        return self.queryset.filter(issue_id=self.kwargs["issue_id"])
+        owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')
+        ownissue_id = Issue.objects.filter(Q(project_id__in=owncontributor_id) &
+                                           Q(author_user=self.request.user)).values_list('id')
+        queryset = Comment.objects.filter(issue_id__in=ownissue_id)
+        return queryset.filter(issue_id=self.kwargs["issue_id"])
 
     def perform_create(self, serializer):
         serializer.save(issue_id=self.kwargs["issue_id"], author_user=self.request.user)
