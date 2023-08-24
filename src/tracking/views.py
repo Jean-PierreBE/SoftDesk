@@ -2,7 +2,7 @@
 from tracking.models import Project, Contributor, Issue, Comment
 from tracking.serializers import ContributorSerializer, ProjectSerializer, \
     ProjectDetailSerializer, IssueSerializer, CommentSerializer
-from tracking.permissions import UpdateOwnObjects
+from tracking.permissions import UpdateOwnObjects, CreateComment, CreateIssue
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
@@ -50,7 +50,7 @@ class ContributorView(viewsets.ModelViewSet):
 class IssueView(viewsets.ModelViewSet):
 
     serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated, UpdateOwnObjects]
+    permission_classes = [IsAuthenticated, UpdateOwnObjects, CreateIssue]
 
     def get_queryset(self):
         owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')
@@ -63,7 +63,7 @@ class IssueView(viewsets.ModelViewSet):
 
 class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated, UpdateOwnObjects]
+    permission_classes = [IsAuthenticated, UpdateOwnObjects, CreateComment]
 
     def get_queryset(self):
         owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')

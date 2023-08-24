@@ -1,4 +1,6 @@
 from rest_framework import permissions
+from tracking.models import Issue, Project, Contributor
+from django.db.models import Q
 
 
 class UpdateOwnObjects(permissions.BasePermission):
@@ -10,3 +12,26 @@ class UpdateOwnObjects(permissions.BasePermission):
             return True
 
         return obj.author_user.id == request.user.id
+
+
+class CreateIssue(permissions.BasePermission):
+    """Allow user to edit their own objects"""
+
+    def has_permission(self, request, view):
+        """Check user is trying to edit their own objects"""
+        parent_project = Project.objects.get(pk=view.kwargs['project_id'])
+        user_project = Contributor.objects.filter(Q(project_id=parent_project.id) &
+                                                  Q(author_user=request.user))
+        if user_project.exists():
+            return True
+        else:
+            return False
+
+
+class CreateComment(permissions.BasePermission):
+    """Allow user to edit their own objects"""
+
+    def has_permission(self, request, view):
+        """Check user is trying to edit their own objects"""
+        parent_issue = Issue.objects.get(pk=view.kwargs['issue_id'])
+        return parent_issue.author_user == request.user
