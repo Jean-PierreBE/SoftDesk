@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from django.db.models import Q
 from tracking.models import Project, Contributor, Issue, Comment
 
 
@@ -15,6 +15,11 @@ class ContributorSerializer(serializers.ModelSerializer):
         model = Contributor
         fields = "__all__"
 
+    def validate(self, data):
+        creator = Contributor.objects.filter(Q(role='CRT') & Q(project_id=data['project']))
+        if creator.exists() and data['role'] == 'CRT':
+            raise serializers.ValidationError('A creator exists allready!!')
+        return data
 
 class ProjectDetailSerializer(serializers.ModelSerializer):
     contributor_set = ContributorSerializer(many=True)

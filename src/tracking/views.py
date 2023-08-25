@@ -14,8 +14,7 @@ class ProjectView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        allcontributor = Contributor.objects.all()
-        owncontributor_id = allcontributor.filter(author_user=self.request.user).values_list('project_id')
+        owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')
         return Project.objects.filter(id__in=owncontributor_id)
 
     def get_serializer_class(self):
