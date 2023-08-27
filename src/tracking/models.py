@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from datetime import datetime
 
 # Create your models here.
 
@@ -15,6 +16,7 @@ class Project(models.Model):
     title = models.CharField(max_length=55, verbose_name="Titre")
     description = models.TextField(max_length=2048, blank=True, verbose_name="Description du projet")
     type = models.CharField(max_length=55, choices=TYPES, verbose_name="Type de projet")
+    time_created = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return self.title
@@ -33,6 +35,7 @@ class Contributor(models.Model):
     role = models.CharField(max_length=55, choices=ROLES, verbose_name="Rôle")
     project = models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
     author_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    time_created = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return self.role

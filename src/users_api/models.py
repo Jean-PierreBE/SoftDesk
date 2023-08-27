@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from datetime import datetime
 
 MESSAGE_NO_EMAIL = "Veuillez saisir un mail !"
 MESSAGE_NO_PSEUDO = "Veuillez saisir un pseudo !"
@@ -76,6 +77,7 @@ class UserProfile(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    time_created = models.DateTimeField(default=datetime.now, blank=True)
 
     USERNAME_FIELD = "pseudo"
     REQUIRED_FIELDS = ["first_name", "last_name", "age", "email", "can_be_contacted", "can_data_be_shared"]
