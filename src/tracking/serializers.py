@@ -21,6 +21,13 @@ class ContributorSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('A creator exists allready!!')
         return data
 
+
+class ContributorDetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contributor
+        fields = "__all__"
+
+
 class ProjectDetailSerializer(serializers.ModelSerializer):
     contributor_set = ContributorSerializer(many=True)
 
@@ -46,3 +53,10 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = "__all__"
+
+
+class CommentUpdSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = fields = ['id', 'description']

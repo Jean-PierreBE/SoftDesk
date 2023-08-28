@@ -1,16 +1,18 @@
 # Create your views here.
-from tracking.models import Project, Contributor, Issue, Comment
-from tracking.serializers import ContributorSerializer, ProjectSerializer, \
-    ProjectDetailSerializer, IssueSerializer, CommentSerializer
-from tracking.permissions import UpdateOwnObjects, CreateComment, CreateIssue
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
+from tracking.models import Project, Contributor, Issue, Comment
+from tracking.serializers import ContributorSerializer, ProjectSerializer, \
+    ProjectDetailSerializer, IssueSerializer, CommentSerializer, CommentUpdSerializer
+from tracking.permissions import UpdateOwnObjects, CreateComment, CreateIssue
+from tracking.paginations import ContributorListPagination, ProjectListPagination, \
+    IssueListPagination, CommentListPagination
 
 
 class ProjectView(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
-
+    pagination_class = ProjectListPagination
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -36,6 +38,7 @@ class ProjectView(viewsets.ModelViewSet):
 class ContributorView(viewsets.ModelViewSet):
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
+    pagination_class = ContributorListPagination
     permission_classes = [IsAuthenticated, UpdateOwnObjects]
 
     def get_queryset(self):
@@ -49,6 +52,7 @@ class ContributorView(viewsets.ModelViewSet):
 class IssueView(viewsets.ModelViewSet):
 
     serializer_class = IssueSerializer
+    pagination_class = IssueListPagination
     permission_classes = [IsAuthenticated, UpdateOwnObjects, CreateIssue]
 
     def get_queryset(self):
@@ -62,7 +66,14 @@ class IssueView(viewsets.ModelViewSet):
 
 class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
+    pagination_class = CommentListPagination
     permission_classes = [IsAuthenticated, UpdateOwnObjects, CreateComment]
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return self.serializer_class
+        else:
+            return CommentUpdSerializer
 
     def get_queryset(self):
         owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')
