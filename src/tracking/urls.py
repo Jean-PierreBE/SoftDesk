@@ -4,9 +4,9 @@ from tracking.views import ProjectView, ContributorView, IssueView, CommentView
 
 router = DefaultRouter()
 router.register('projects', ProjectView, basename='project')
-router.register('projects/(?P<project_id>[^/.]+)/contributor', ContributorView, basename='contributor')
-router.register('projects/(?P<project_id>[^/.]+)/issue', IssueView, basename='issue')
-router.register('projects/(?P<project_id>[^/.]+)/issue/(?P<issue_id>[^/.]+)/comment', CommentView, basename='comment')
+router.register('projects/(?P<project_id>[^/.]+)/users', ContributorView, basename='contributor')
+router.register('projects/(?P<project_id>[^/.]+)/issues', IssueView, basename='issue')
+router.register('projects/(?P<project_id>[^/.]+)/issues/(?P<issue_id>[^/.]+)/comments', CommentView, basename='comment')
 
 urlpatterns = [
     path('', include(router.urls))
