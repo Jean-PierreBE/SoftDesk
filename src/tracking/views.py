@@ -4,10 +4,12 @@ from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
 from tracking.models import Project, Contributor, Issue, Comment
 from tracking.serializers import ContributorSerializer, ProjectSerializer, \
-    ProjectDetailSerializer, IssueSerializer, CommentSerializer, CommentUpdSerializer
+    ProjectDetailSerializer, IssueSerializer, IssueUpdSerializer,\
+    CommentSerializer, CommentUpdSerializer
 from tracking.permissions import UpdateOwnObjects, CreateComment, CreateIssue
 from tracking.paginations import ContributorListPagination, ProjectListPagination, \
     IssueListPagination, CommentListPagination
+
 
 
 class ProjectView(viewsets.ModelViewSet):
@@ -54,6 +56,12 @@ class IssueView(viewsets.ModelViewSet):
     serializer_class = IssueSerializer
     pagination_class = IssueListPagination
     permission_classes = [IsAuthenticated, UpdateOwnObjects, CreateIssue]
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return self.serializer_class
+        else:
+            return IssueUpdSerializer
 
     def get_queryset(self):
         owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')

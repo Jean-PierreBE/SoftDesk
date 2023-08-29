@@ -47,6 +47,16 @@ class IssueSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('assignee_user should be different from author_user!!')
         return data
 
+class IssueUpdSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Issue
+        fields = ['id', 'title', 'description', 'tag', 'priority', 'status', 'assignee_user']
+
+    def validate(self, data):
+        if data['assignee_user'] == self.context["request"].user:
+            raise serializers.ValidationError('assignee_user should be different from author_user!!')
+        return data
 
 class CommentSerializer(serializers.ModelSerializer):
 
@@ -59,4 +69,4 @@ class CommentUpdSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = fields = ['id', 'description']
+        fields = ['id', 'description']
