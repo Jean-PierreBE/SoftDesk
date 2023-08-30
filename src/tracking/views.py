@@ -3,13 +3,12 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
 from tracking.models import Project, Contributor, Issue, Comment
-from tracking.serializers import ContributorSerializer, ProjectSerializer, \
+from tracking.serializers import ContributorSerializer, ContributorUpdSerializer, ProjectSerializer, \
     ProjectDetailSerializer, IssueSerializer, IssueUpdSerializer,\
     CommentSerializer, CommentUpdSerializer
 from tracking.permissions import UpdateOwnObjects, CreateComment, CreateIssue
 from tracking.paginations import ContributorListPagination, ProjectListPagination, \
     IssueListPagination, CommentListPagination
-
 
 
 class ProjectView(viewsets.ModelViewSet):
@@ -43,8 +42,13 @@ class ContributorView(viewsets.ModelViewSet):
     pagination_class = ContributorListPagination
     permission_classes = [IsAuthenticated, UpdateOwnObjects]
 
-    def get_queryset(self):
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return self.serializer_class
+        else:
+            return ContributorUpdSerializer
 
+    def get_queryset(self):
         return self.queryset.filter(project_id=self.kwargs["project_id"])
 
     def perform_create(self, serializer):

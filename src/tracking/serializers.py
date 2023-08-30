@@ -15,17 +15,19 @@ class ContributorSerializer(serializers.ModelSerializer):
         model = Contributor
         fields = "__all__"
 
+
+class ContributorUpdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contributor
+        fields = ['id', 'role']
+
     def validate(self, data):
-        creator = Contributor.objects.filter(Q(role='CRT') & Q(project_id=data['project']))
+        my_view = self.context['view']
+        object_id = my_view.kwargs.get('project_id')
+        creator = Contributor.objects.filter(Q(role='CRT') & Q(project_id=object_id))
         if creator.exists() and data['role'] == 'CRT':
             raise serializers.ValidationError('A creator exists allready!!')
         return data
-
-
-class ContributorDetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Contributor
-        fields = "__all__"
 
 
 class ProjectDetailSerializer(serializers.ModelSerializer):
@@ -42,10 +44,6 @@ class IssueSerializer(serializers.ModelSerializer):
         model = Issue
         fields = "__all__"
 
-    def validate(self, data):
-        if data['assignee_user'] == self.context["request"].user:
-            raise serializers.ValidationError('assignee_user should be different from author_user!!')
-        return data
 
 class IssueUpdSerializer(serializers.ModelSerializer):
 
@@ -57,6 +55,7 @@ class IssueUpdSerializer(serializers.ModelSerializer):
         if data['assignee_user'] == self.context["request"].user:
             raise serializers.ValidationError('assignee_user should be different from author_user!!')
         return data
+
 
 class CommentSerializer(serializers.ModelSerializer):
 
