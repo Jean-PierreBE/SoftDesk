@@ -63,8 +63,7 @@ class Issue(models.Model):
     priority = models.CharField(max_length=55, choices=PRIORITIES, verbose_name="Priorité")
     status = models.CharField(max_length=55, choices=STATUS, verbose_name="Statut")
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
-    author_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
-                                    null=True, related_name='creator')
+    author_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='creator')
     assignee_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                                       null=True, related_name='assign')
     time_created = models.DateTimeField(auto_now_add=True)
@@ -76,7 +75,7 @@ class Issue(models.Model):
 class Comment(models.Model):
     description = models.TextField(max_length=2048, blank=True, verbose_name="Commentaire")
     issue = models.ForeignKey(to=Issue, on_delete=models.CASCADE)
-    author_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    author_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
