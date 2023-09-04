@@ -34,7 +34,8 @@ dans le browser de votre choix.
 - une fois le user créé , on peut se connecter avec le end point login avec le user et le password. L'API renverra un code token.
   Avec ce code token on peut utiliser l'API.  
 - L'utilsateur pourra commencer à créer un projet , il sera le creator. Une fois le projet créé , d'autres utilisateurs pourront s'ajouter au projet avec des postes divers mais pas creator. 
-- Si l'utilisateur est lié à un projet , il peut créer une issue   
+- Si l'utilisateur est lié à un projet , il peut créer une issue et l'affecter à un utilisateur lié au projet.
+- Chaque utilisateur lié au projet peut ajouter des commentaires aux issues créées  
 
 
 ## Contrôle qualité
