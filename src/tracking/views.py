@@ -1,12 +1,11 @@
 # Create your views here.
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Q
 from tracking.models import Project, Contributor, Issue, Comment
 from tracking.serializers import ContributorSerializer, ContributorUpdSerializer, ProjectSerializer, \
     ProjectDetailSerializer, IssueSerializer, IssueUpdSerializer,\
     CommentSerializer, CommentUpdSerializer
-from tracking.permissions import UpdateOwnObjects, CreateComment, CreateIssue
+from tracking.permissions import UpdateOwnObjects, CreateIssueComment
 from tracking.paginations import ContributorListPagination, ProjectListPagination, \
     IssueListPagination, CommentListPagination
 
@@ -59,7 +58,7 @@ class IssueView(viewsets.ModelViewSet):
 
     serializer_class = IssueSerializer
     pagination_class = IssueListPagination
-    permission_classes = [IsAuthenticated, UpdateOwnObjects, CreateIssue]
+    permission_classes = [IsAuthenticated, UpdateOwnObjects, CreateIssueComment]
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -69,7 +68,7 @@ class IssueView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')
-        queryset = Issue.objects.filter(Q(project_id__in=owncontributor_id) & Q(project_id__in=owncontributor_id))
+        queryset = Issue.objects.filter(project_id__in=owncontributor_id)
         return queryset.filter(project_id=self.kwargs["project_id"])
 
     def perform_create(self, serializer):
@@ -79,7 +78,7 @@ class IssueView(viewsets.ModelViewSet):
 class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     pagination_class = CommentListPagination
-    permission_classes = [IsAuthenticated, UpdateOwnObjects, CreateComment]
+    permission_classes = [IsAuthenticated, UpdateOwnObjects, CreateIssueComment]
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -89,8 +88,7 @@ class CommentView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')
-        ownissue_id = Issue.objects.filter(Q(project_id__in=owncontributor_id) &
-                                           Q(author_user=self.request.user)).values_list('id')
+        ownissue_id = Issue.objects.filter(project_id__in=owncontributor_id).values_list('id')
         queryset = Comment.objects.filter(issue_id__in=ownissue_id)
         return queryset.filter(issue_id=self.kwargs["issue_id"])
 

@@ -52,8 +52,15 @@ class IssueUpdSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'tag', 'priority', 'status', 'assignee_user']
 
     def validate(self, data):
-        if data['assignee_user'] == self.context["request"].user:
-            raise serializers.ValidationError('assignee_user should be different from author_user!!')
+
+        my_view = self.context['view']
+        object_id = my_view.kwargs.get('project_id')
+        user_ok = Contributor.objects.filter(Q(author_user=data['assignee_user']) & Q(project_id=object_id))
+        if user_ok.exists():
+            if data['assignee_user'] == self.context["request"].user:
+                raise serializers.ValidationError('assignee_user should be different from author_user!!')
+        else:
+            raise serializers.ValidationError('assignee_user doesn''t belong to the project!!')
         return data
 
 
