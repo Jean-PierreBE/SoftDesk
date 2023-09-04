@@ -30,8 +30,11 @@ On lance le programme en tapant sur la ligne de commande dans le répertoire src
 Une fois la commande précédente exécutée, mettre l'adresse suivante
 - `http://127.0.0.1:8000/`
 dans le browser de votre choix.
-- pour commencer il faut créer un user avec le end point signup. Les renseignements demandés sont
--
+- pour commencer il faut créer un user avec le end point signup. Il faut renseigner au minimum un user , adresse mail et password.
+- une fois le user créé , on peut se connecter avec le end point login avec le user et le password. L'API renverra un code token.
+  Avec ce code token on peut utiliser l'API.  
+- L'utilsateur pourra commencer à créer un projet , il sera le creator. Une fois le projet créé , d'autres utilisateurs pourront s'ajouter au projet avec des postes divers mais pas creator. 
+- Si l'utilisateur est lié à un projet , il peut créer une issue   
 
 
 ## Contrôle qualité
