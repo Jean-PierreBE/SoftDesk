@@ -23,11 +23,11 @@ les packages installés sont les suivants :
 - djangorestframework : framework permettant de décvelopper des apis
 
 ## Lancement du programme
-Pour créer la db on tape sur la ligne de commande dans le répertoire src:
-- `python manage.py makemigrations`
-- `python manage.py migrate`
-On lance le programme en tapant sur la ligne de commande dans le répertoire src:
-- `python manage.py runserver`
+- Pour créer la db on tape sur la ligne de commande dans le répertoire src:
+  - `python manage.py makemigrations`
+  - `python manage.py migrate`
+- On lance le programme en tapant sur la ligne de commande dans le répertoire src:
+  - `python manage.py runserver`
 
 ## Déroulement du programme
 Une fois la commande précédente exécutée, mettre l'adresse suivante
