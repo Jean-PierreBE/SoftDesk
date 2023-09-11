@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from tracking.models import Project, Contributor, Issue, Comment
 from tracking.serializers import ContributorSerializer, ContributorUpdSerializer, ProjectSerializer, \
-    ProjectDetailSerializer, IssueSerializer, IssueUpdSerializer,\
+    ProjectDetailSerializer, IssueSerializer, IssueUpdSerializer, \
     CommentSerializer, CommentUpdSerializer
 from tracking.permissions import UpdateOwnObjects, CreateIssueComment
 from tracking.paginations import ContributorListPagination, ProjectListPagination, \
