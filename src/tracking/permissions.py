@@ -1,6 +1,7 @@
 from rest_framework import permissions
 from tracking.models import Project, Contributor
 from django.db.models import Q
+from rest_framework.exceptions import ValidationError
 
 
 class UpdateOwnObjects(permissions.BasePermission):
@@ -19,10 +20,14 @@ class CreateIssueComment(permissions.BasePermission):
 
     def has_permission(self, request, view):
         """Check user is trying to edit their own objects"""
-        parent_project = Project.objects.get(pk=view.kwargs['project_id'])
-        user_project = Contributor.objects.filter(Q(project_id=parent_project.id) &
-                                                  Q(author_user=request.user))
-        if user_project.exists():
-            return True
-        else:
-            return False
+        try:
+            parent_project = Project.objects.get(pk=view.kwargs['project_id'])
+            user_project = Contributor.objects.filter(Q(project_id=parent_project.id) &
+                                                      Q(author_user=request.user))
+            if user_project.exists():
+                return True
+            else:
+                return False
+        except:
+            raise ValidationError(detail='project_id doesn''st exist')
+
