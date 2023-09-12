@@ -67,13 +67,9 @@ class IssueView(viewsets.ModelViewSet):
             return IssueUpdSerializer
 
     def get_queryset(self):
-        try:
-            print('before get')
-            owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')
-            queryset = Issue.objects.filter(project_id__in=owncontributor_id)
-            return queryset.filter(project_id=self.kwargs["project_id"])
-        except:
-            raise ValidationError(detail='Invalid Params')
+        owncontributor_id = Contributor.objects.filter(author_user=self.request.user).values_list('project_id')
+        queryset = Issue.objects.filter(project_id__in=owncontributor_id)
+        return queryset.filter(project_id=self.kwargs["project_id"])
 
     def perform_create(self, serializer):
         serializer.save(project_id=self.kwargs["project_id"], author_user=self.request.user)

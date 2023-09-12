@@ -24,10 +24,14 @@ class ContributorUpdSerializer(serializers.ModelSerializer):
     def validate(self, data):
         my_view = self.context['view']
         object_id = my_view.kwargs.get('project_id')
-        creator = Contributor.objects.filter(Q(role='CRT') & Q(project_id=object_id))
-        if creator.exists() and data['role'] == 'CRT':
-            raise serializers.ValidationError('A creator exists allready!!')
-        return data
+        objexists = Contributor.objects.filter(project_id=object_id)
+        if objexists.exists():
+            creator = Contributor.objects.filter(Q(role='CRT') & Q(project_id=object_id))
+            if creator.exists() and data['role'] == 'CRT':
+                raise serializers.ValidationError('A creator exists allready!!')
+            return data
+        else:
+            raise serializers.ValidationError("project_id doesn't exists")
 
 
 class ProjectDetailSerializer(serializers.ModelSerializer):

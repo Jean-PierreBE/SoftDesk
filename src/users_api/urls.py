@@ -6,7 +6,7 @@ from users_api import views
 
 
 router = DefaultRouter()
-router.register('signup', views.UserProfileViewSet)
+router.register('signup', views.UserProfileViewSet, basename='user')
 
 urlpatterns = [
     path('', include(router.urls))

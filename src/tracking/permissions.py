@@ -29,5 +29,4 @@ class CreateIssueComment(permissions.BasePermission):
             else:
                 return False
         except:
-            raise ValidationError(detail='project_id doesn''st exist')
-
+            raise ValidationError(detail="project_id doesn'st exist")
